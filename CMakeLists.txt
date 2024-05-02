@@ -23,7 +23,7 @@ set(COMMON_FLAGS "-mcpu=cortex-m3 -mthumb -mthumb-interwork -Os -Wall -ffunction
 set(CMAKE_CXX_FLAGS "${COMMON_FLAGS} -std=c++17")
 set(CMAKE_C_FLAGS "${COMMON_FLAGS} -std=gnu11")
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -specs=nano.specs -T${CMAKE_SOURCE_DIR}/STM32F103C8Tx_FLASH.ld")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections --specs=nosys.specs -T${CMAKE_SOURCE_DIR}/STM32F103C8Tx_FLASH.ld")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map,--cref")
 
 set_property(SOURCE startup_stm32f103xb.s PROPERTY LANGUAGE C)
