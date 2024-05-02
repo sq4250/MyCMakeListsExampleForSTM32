@@ -19,11 +19,12 @@ set(OBJCOPY arm-none-eabi-objcopy)
 set(CMAKE_SYSTEM_NAME Generic)
 
 set(COMMON_FLAGS "-mcpu=cortex-m3 -mthumb -mthumb-interwork -Os -Wall -ffunction-sections -fdata-sections -fno-common")
+# set(COMMON_FLAGS "-mcpu=cortex-m3 -mthumb -mthumb-interwork -g -gdwarf-2 -Wall -ffunction-sections -fdata-sections -fno-common")
 set(CMAKE_CXX_FLAGS "${COMMON_FLAGS} -std=c++17")
 set(CMAKE_C_FLAGS "${COMMON_FLAGS} -std=gnu11")
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections --specs=nosys.specs -T${CMAKE_SOURCE_DIR}/STM32F103C8Tx_FLASH.ld")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${CMAKE_SOURCE_DIR}/build/${PROJECT_NAME}.map,--cref")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -specs=nano.specs -T${CMAKE_SOURCE_DIR}/STM32F103C8Tx_FLASH.ld")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${CMAKE_BINARY_DIR}/${PROJECT_NAME}.map,--cref")
 
 set_property(SOURCE startup_stm32f103xb.s PROPERTY LANGUAGE C)
 set_source_files_properties(startup_stm32f103xb.s PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp")
@@ -32,10 +33,10 @@ add_library(STARTUP startup_stm32f103xb.s)
 
 add_executable(${PROJECT_NAME}.elf ${SRC} ${CXXSRC})
 
-target_link_libraries(${PROJECT_NAME}.elf STARTUP)
+target_link_libraries(${PROJECT_NAME}.elf STARTUP c m nosys)
 
-set(HEX_FILE ${CMAKE_SOURCE_DIR}/build/${PROJECT_NAME}.hex)
-set(BIN_FILE ${CMAKE_SOURCE_DIR}/build/${PROJECT_NAME}.bin)
+set(HEX_FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.hex)
+set(BIN_FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bin)
 
 add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
         COMMAND ${OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
